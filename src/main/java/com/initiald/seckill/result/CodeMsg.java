@@ -1,6 +1,5 @@
 package com.initiald.seckill.result;
 
-import com.sun.org.apache.bcel.internal.classfile.Code;
 
 /**
  * @author initiald0824
