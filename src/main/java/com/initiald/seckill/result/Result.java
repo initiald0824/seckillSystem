@@ -23,11 +23,11 @@ public class Result<T> {
         this.message = codeMsg.getMessage();
     }
 
-    public static <E> Result success(E data) {
+    public static <T> Result success(T data) {
         return new Result<>(data);
     }
 
-    public static <E> Result error(CodeMsg codeMsg) {
+    public static Result error(CodeMsg codeMsg) {
         return new Result<>(codeMsg);
     }
 
