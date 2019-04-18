@@ -1,9 +1,12 @@
 package com.initiald.seckill.controller;
 
 import com.initiald.seckill.redis.RedisService;
+import com.initiald.seckill.result.Result;
+import com.initiald.seckill.vo.LoginVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
+@RequestMapping("/api")
 public class LoginController {
 
     @Autowired
@@ -19,5 +23,9 @@ public class LoginController {
 
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
-
+    @RequestMapping("/login")
+    public Result login(LoginVo loginVo) {
+        log.info(loginVo.toString());
+        return null;
+    }
 }
