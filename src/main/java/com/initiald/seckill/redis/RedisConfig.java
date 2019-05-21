@@ -13,6 +13,7 @@ public class RedisConfig {
     private String host;
     private int port;
     private int timeout;
+    private String password;
     private int poolMaxTotal;
     private int poolMaxIdle;
     private int poolMaxWait;
@@ -35,6 +36,14 @@ public class RedisConfig {
 
     public int getTimeout() {
         return timeout;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setTimeout(int timeout) {

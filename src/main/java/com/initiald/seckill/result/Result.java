@@ -23,7 +23,7 @@ public class Result<T> {
         this.message = codeMsg.getMessage();
     }
 
-    public static <T> Result success(T data) {
+    public static <E> Result success(E data) {
         return new Result<>(data);
     }
 
