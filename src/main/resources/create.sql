@@ -1,5 +1,5 @@
 drop table if exists `miaosha_user`;
-create table `miaosha_user` (
+create table `seckill_user` (
   `id` bigint(20) not null comment '用户ID，手机号码',
   `nickname` varchar(255) not null,
   `password` varchar(32) default null comment 'MD5(MD5(pass明文+固定salt) + salt)',

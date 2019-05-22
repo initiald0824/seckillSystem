@@ -11,6 +11,10 @@ public class CodeMsg {
 
     public static CodeMsg SUCCESS = new CodeMsg(0, "success");
     public static CodeMsg SERVER_ERROR = new CodeMsg(500, "server error");
+    public static CodeMsg MOBILE_EMPTY = new CodeMsg(500100, "empty mobile");
+    public static CodeMsg MOBILE_ERROR = new CodeMsg(500101, "error mobile");
+    public static CodeMsg MOBILE_NOT_EXIST = new CodeMsg(500102, "mobile not exist");
+    public static CodeMsg PASSWORD_ERROR = new CodeMsg(500103, "password error");
 
 
     private CodeMsg(int code, String message) {
