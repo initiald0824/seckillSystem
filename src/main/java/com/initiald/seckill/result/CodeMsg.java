@@ -16,10 +16,18 @@ public class CodeMsg {
     public static CodeMsg MOBILE_NOT_EXIST = new CodeMsg(500102, "mobile not exist");
     public static CodeMsg PASSWORD_ERROR = new CodeMsg(500103, "password error");
 
+    public static CodeMsg BIND_ERROR = new CodeMsg(500110, "参数校验异常: %s");
+
 
     private CodeMsg(int code, String message) {
         this.code = code;
         this.message = message;
+    }
+
+    public CodeMsg fillArgs(Object... args) {
+        int code = this.code;
+        String message = String.format(this.message, args);
+        return new CodeMsg(code, message);
     }
 
     public int getCode() {

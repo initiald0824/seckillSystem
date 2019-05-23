@@ -34,14 +34,9 @@ public class LoginController {
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @RequestMapping("/login")
-    public Result login(LoginVo loginVo) {
+    public Result login(@Valid LoginVo loginVo) {
         log.info(loginVo.toString());
         // 登录
-        CodeMsg cm = userService.login(loginVo);
-        if (cm.getCode() == 0) {
-            return Result.success(CodeMsg.SUCCESS);
-        } else {
-            return Result.error(cm);
-        }
+        return Result.success(userService.login(loginVo));
     }
 }
