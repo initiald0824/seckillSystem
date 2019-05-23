@@ -34,7 +34,7 @@ public class LoginController {
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @RequestMapping("/login")
-    public Result login(@Valid LoginVo loginVo) {
+    public Result login(LoginVo loginVo) {
         log.info(loginVo.toString());
         // 登录
         return Result.success(userService.login(loginVo));
