@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 /**
@@ -34,9 +35,9 @@ public class LoginController {
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @RequestMapping("/login")
-    public Result login(LoginVo loginVo) {
+    public Result login(HttpServletResponse response, LoginVo loginVo) {
         log.info(loginVo.toString());
         // 登录
-        return Result.success(userService.login(loginVo));
+        return Result.success(userService.login(response, loginVo));
     }
 }
