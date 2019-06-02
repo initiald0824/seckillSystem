@@ -7,8 +7,14 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.initiald.seckill.config.annotation.PassToken;
 import com.initiald.seckill.config.annotation.UserLoginToken;
+import com.initiald.seckill.controller.LoginController;
 import com.initiald.seckill.domain.SeckillUser;
+import com.initiald.seckill.exception.GlobalException;
+import com.initiald.seckill.result.CodeMsg;
 import com.initiald.seckill.service.SeckillUserService;
+import jdk.nashorn.internal.objects.Global;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -30,8 +36,11 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Autowired
     private SeckillUserService userService;
 
+    private static Logger log = LoggerFactory.getLogger(LoginInterceptor.class);
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        log.info("preHandle");
         String token = request.getHeader("authorization");
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -50,25 +59,25 @@ public class LoginInterceptor implements HandlerInterceptor {
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
             if (userLoginToken.required()) {
                 if (token == null) {
-                    throw new RuntimeException("无token，请重新登录");
+                    throw new GlobalException(CodeMsg.NO_TOKEN);
                 }
                 // 获取token中的user_id
                 String userId;
                 try {
                     userId = JWT.decode(token).getAudience().get(0);
                 } catch (JWTDecodeException e) {
-                    throw new RuntimeException("401");
+                    throw new GlobalException(CodeMsg.WRONG_TOKEN);
                 }
                 SeckillUser user = userService.getById(Long.valueOf(userId));
                 if (user == null) {
-                    throw new RuntimeException("用户不存在，请重新登录");
+                    throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
                 }
                 request.setAttribute("user", user);
                 JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
                 try {
                     jwtVerifier.verify(token);
                 } catch (JWTVerificationException e) {
-                    throw new RuntimeException("401");
+                    throw new GlobalException(CodeMsg.WRONG_TOKEN);
                 }
                 return true;
             }

@@ -1,5 +1,6 @@
 package com.initiald.seckill.service;
 
+import com.initiald.seckill.controller.LoginController;
 import com.initiald.seckill.dao.SeckillUserDao;
 import com.initiald.seckill.domain.SeckillUser;
 import com.initiald.seckill.exception.GlobalException;
@@ -10,6 +11,8 @@ import com.initiald.seckill.uitl.MD5Util;
 import com.initiald.seckill.uitl.TokenUtil;
 import com.initiald.seckill.uitl.UUIDUtil;
 import com.initiald.seckill.vo.LoginVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,7 @@ public class SeckillUserService {
     @Autowired
     private RedisService redisService;
 
+    private static Logger log = LoggerFactory.getLogger(SeckillUserService.class);
 
     private static final String COOK1_NAME_TOKEN = "token";
 
@@ -38,13 +42,13 @@ public class SeckillUserService {
         return seckillUserDao.getById(id);
     }
 
-    private Cookie generateCookie(SeckillUser user) {
+    private void generateCookie(HttpServletResponse response, SeckillUser user) {
         String token = TokenUtil.getToken(user);
         redisService.set(SeckillUserKey.token, token, user);
         Cookie cookie = new Cookie(COOK1_NAME_TOKEN, token);
         cookie.setMaxAge(SeckillUserKey.token.expireSeconds());
         cookie.setPath("/");
-        return cookie;
+        response.addCookie(cookie);
     }
 
     /**
@@ -67,8 +71,8 @@ public class SeckillUserService {
         String salt = user.getSalt();
         if (dbPass.equals(MD5Util.md5(password + salt))) {
             // 生成cookie
-            Cookie cookie = generateCookie(user);
-            response.addCookie(cookie);
+            generateCookie(response, user);
+            log.info("login success");
             return true;
         } else {
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
@@ -82,9 +86,8 @@ public class SeckillUserService {
      * @return
      */
     public boolean authorization(HttpServletRequest request, HttpServletResponse response) {
-        SeckillUser user = (SeckillUser) request.getAttribute("userName");
-        Cookie cookie = generateCookie(user);
-        response.addCookie(cookie);
+        SeckillUser user = (SeckillUser) request.getAttribute("user");
+        generateCookie(response, user);
         return true;
     }
 }

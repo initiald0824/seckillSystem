@@ -1,5 +1,6 @@
 package com.initiald.seckill.controller;
 
+import com.initiald.seckill.config.annotation.UserLoginToken;
 import com.initiald.seckill.redis.RedisService;
 import com.initiald.seckill.result.CodeMsg;
 import com.initiald.seckill.result.Result;
@@ -37,6 +38,12 @@ public class LoginController {
 
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
+    /**
+     * 用户名：110 密码：test
+     * @param response
+     * @param loginVo
+     * @return
+     */
     @RequestMapping("/login")
     public Result login(HttpServletResponse response, LoginVo loginVo) {
         log.info(loginVo.toString());
@@ -44,6 +51,7 @@ public class LoginController {
         return Result.success(userService.login(response, loginVo));
     }
 
+    @UserLoginToken
     @RequestMapping("/authorization")
     public Result authorization(HttpServletRequest request, HttpServletResponse response) {
         log.info("刷新token");

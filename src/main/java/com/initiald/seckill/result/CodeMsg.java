@@ -18,6 +18,10 @@ public class CodeMsg {
 
     public static CodeMsg BIND_ERROR = new CodeMsg(500110, "参数校验异常: %s");
 
+    public static CodeMsg NO_TOKEN = new CodeMsg(500201, "无Token");
+
+    public static CodeMsg WRONG_TOKEN = new CodeMsg(500202, "错误的Token");
+
 
     private CodeMsg(int code, String message) {
         this.code = code;
