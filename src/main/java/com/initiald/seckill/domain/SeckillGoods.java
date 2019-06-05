@@ -11,6 +11,7 @@ public class SeckillGoods {
     private Long id;
     private Long goodsId;
     private Integer stockCount;
+    private Double seckillPrice;
     private Date startDate;
     private Date endDate;
 
@@ -36,6 +37,14 @@ public class SeckillGoods {
 
     public void setStockCount(Integer stockCount) {
         this.stockCount = stockCount;
+    }
+
+    public Double getSeckillPrice() {
+        return seckillPrice;
+    }
+
+    public void setSeckillPrice(Double seckillPrice) {
+        this.seckillPrice = seckillPrice;
     }
 
     public Date getStartDate() {

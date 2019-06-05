@@ -11,6 +11,7 @@ import java.util.Date;
 public class GoodsVo extends Goods {
 
     private Integer stockCount;
+    private Double seckillPrice;
     private Date startDate;
     private Date endDate;
 
@@ -20,6 +21,14 @@ public class GoodsVo extends Goods {
 
     public void setStockCount(Integer stockCount) {
         this.stockCount = stockCount;
+    }
+
+    public Double getSeckillPrice() {
+        return seckillPrice;
+    }
+
+    public void setSeckillPrice(Double seckillPrice) {
+        this.seckillPrice = seckillPrice;
     }
 
     public Date getStartDate() {

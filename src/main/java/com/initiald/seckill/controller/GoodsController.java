@@ -1,5 +1,6 @@
 package com.initiald.seckill.controller;
 
+import com.initiald.seckill.result.Result;
 import com.initiald.seckill.service.GoodsService;
 import com.initiald.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class GoodsController {
     private GoodsService goodsService;
 
     @RequestMapping("/list_goods")
-    public List<GoodsVo> listGoods() {
-        return goodsService.listGoodsVo();
+    public Result listGoods() {
+        return Result.success(goodsService.listGoodsVo());
     }
 }
