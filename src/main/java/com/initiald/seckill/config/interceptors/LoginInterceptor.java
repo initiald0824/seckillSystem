@@ -7,12 +7,10 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.initiald.seckill.config.annotation.PassToken;
 import com.initiald.seckill.config.annotation.UserLoginToken;
-import com.initiald.seckill.controller.LoginController;
 import com.initiald.seckill.domain.SeckillUser;
 import com.initiald.seckill.exception.GlobalException;
 import com.initiald.seckill.result.CodeMsg;
 import com.initiald.seckill.service.SeckillUserService;
-import jdk.nashorn.internal.objects.Global;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,9 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Autowired
     private SeckillUserService userService;
+
+    @Autowired
+    private SeckillUserService seckillUserService;
 
     private static Logger log = LoggerFactory.getLogger(LoginInterceptor.class);
 
@@ -73,6 +74,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                     throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
                 }
                 request.setAttribute("user", user);
+                request.setAttribute("token", token);
                 JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
                 try {
                     jwtVerifier.verify(token);
@@ -87,6 +89,9 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        SeckillUser user = (SeckillUser) request.getAttribute("user");
+        String token = (String) request.getAttribute("token");
+        seckillUserService.generateCookie(token, response, user);
     }
 
     @Override

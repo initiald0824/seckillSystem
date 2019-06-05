@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -36,14 +37,13 @@ public class SeckillUserService {
 
     private static Logger log = LoggerFactory.getLogger(SeckillUserService.class);
 
-    private static final String COOK1_NAME_TOKEN = "token";
+    public static final String COOK1_NAME_TOKEN = "token";
 
     public SeckillUser getById(long id) {
         return seckillUserDao.getById(id);
     }
 
-    private void generateCookie(HttpServletResponse response, SeckillUser user) {
-        String token = TokenUtil.getToken(user);
+    public void generateCookie(String token, HttpServletResponse response, SeckillUser user) {
         redisService.set(SeckillUserKey.token, token, user);
         Cookie cookie = new Cookie(COOK1_NAME_TOKEN, token);
         cookie.setMaxAge(SeckillUserKey.token.expireSeconds());
@@ -71,12 +71,25 @@ public class SeckillUserService {
         String salt = user.getSalt();
         if (dbPass.equals(MD5Util.md5(password + salt))) {
             // 生成cookie
-            generateCookie(response, user);
+            String token = TokenUtil.getToken(user);
+            generateCookie(token, response, user);
             log.info("login success");
             return true;
         } else {
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
         }
+    }
+
+    public SeckillUser getByToken(HttpServletResponse response, String token) {
+        if (StringUtils.isEmpty(token)) {
+            return null;
+        }
+
+        SeckillUser user = redisService.get(SeckillUserKey.token, token, SeckillUser.class);
+        if (user != null) {
+            generateCookie(token, response, user);
+        }
+        return user;
     }
 
     /**
@@ -87,7 +100,8 @@ public class SeckillUserService {
      */
     public boolean authorization(HttpServletRequest request, HttpServletResponse response) {
         SeckillUser user = (SeckillUser) request.getAttribute("user");
-        generateCookie(response, user);
+        String token = (String) request.getAttribute("token");
+        generateCookie(token, response, user);
         return true;
     }
 }
