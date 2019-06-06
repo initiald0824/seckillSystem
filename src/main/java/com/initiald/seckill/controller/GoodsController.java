@@ -5,6 +5,8 @@ import com.initiald.seckill.service.GoodsService;
 import com.initiald.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,5 +26,10 @@ public class GoodsController {
     @RequestMapping("/list_goods")
     public Result listGoods() {
         return Result.success(goodsService.listGoodsVo());
+    }
+
+    @RequestMapping(value = "/goodsDetail", method = RequestMethod.GET)
+    public Result getGoodsDetail(@RequestParam Integer id) {
+        return Result.success(goodsService.getGoodsDetail(id));
     }
 }

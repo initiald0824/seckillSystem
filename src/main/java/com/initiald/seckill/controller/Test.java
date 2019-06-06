@@ -1,5 +1,6 @@
 package com.initiald.seckill.controller;
 
+import com.initiald.seckill.domain.SeckillUser;
 import com.initiald.seckill.domain.User;
 import com.initiald.seckill.redis.RedisService;
 import com.initiald.seckill.redis.UserKey;
@@ -24,8 +25,8 @@ public class Test {
     private RedisService redisService;
 
     @RequestMapping(value = "/api/test", method = RequestMethod.GET)
-    public Result test() {
-        return Result.success("test");
+    public Result test(SeckillUser user) {
+        return Result.success(user);
     }
 
     @RequestMapping("/redis/get")
