@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80011
 File Encoding         : 65001
 
-Date: 2019-06-05 20:39:17
+Date: 2019-06-06 17:32:17
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -76,7 +76,7 @@ CREATE TABLE `seckill_goods` (
 -- ----------------------------
 -- Records of seckill_goods
 -- ----------------------------
-INSERT INTO `seckill_goods` VALUES ('1', '1', '0.01', '4', '2019-06-05 10:00:00', '2019-06-05 11:00:00');
+INSERT INTO `seckill_goods` VALUES ('1', '1', '0.01', '4', '2019-06-06 17:08:00', '2019-06-09 11:00:00');
 INSERT INTO `seckill_goods` VALUES ('2', '2', '0.01', '4', '2019-06-05 17:05:58', '2019-06-05 17:06:03');
 
 -- ----------------------------
