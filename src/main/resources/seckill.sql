@@ -13,6 +13,7 @@ File Encoding         : 65001
 Date: 2019-06-06 17:32:17
 */
 
+USE seckill;
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
