@@ -26,6 +26,6 @@ public interface GoodsDao {
             "from seckill_goods sg left join goods g on sg.goods_id=g.id where g.id=#{goodsId}")
     public SeckillGoodsVo getById(@Param("goodsId") Long id);
 
-    @Update("update seckill_goods set stock_count = stock_count - 1 where goods_id = #{goodsId}")
+    @Update("update seckill_goods set stock_count = stock_count - 1 where goods_id = #{goodsId} and stock_count > 0")
     public int reduceStock(SeckillGoods seckillGoods);
 }

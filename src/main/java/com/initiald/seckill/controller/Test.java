@@ -29,6 +29,11 @@ public class Test {
         return Result.success(user);
     }
 
+    @RequestMapping(value = "/user/info", method = RequestMethod.GET)
+    public Result info(SeckillUser user) {
+        return Result.success(user);
+    }
+
     @RequestMapping("/redis/get")
     public Result redisGet() {
         User user = redisService.get(UserKey.getById, "key1", User.class);

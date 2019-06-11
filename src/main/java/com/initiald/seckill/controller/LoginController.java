@@ -7,7 +7,6 @@ import com.initiald.seckill.result.Result;
 import com.initiald.seckill.service.SeckillUserService;
 import com.initiald.seckill.uitl.ValidatorUtil;
 import com.initiald.seckill.vo.LoginVo;
-import com.sun.deploy.net.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

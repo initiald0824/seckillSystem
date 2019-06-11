@@ -26,6 +26,8 @@ public class CodeMsg {
 
     public static CodeMsg SECKILL_REPEATE = new CodeMsg(500501, "不能重复秒杀");
 
+    public static CodeMsg ORDER_NOT_EXIST = new CodeMsg(500502, "订单不存在");
+
 
     private CodeMsg(int code, String message) {
         this.code = code;

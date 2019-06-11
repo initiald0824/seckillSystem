@@ -10,6 +10,7 @@ import com.initiald.seckill.service.GoodsService;
 import com.initiald.seckill.service.OrderService;
 import com.initiald.seckill.service.SeckillService;
 import com.initiald.seckill.vo.GoodsVo;
+import com.initiald.seckill.vo.OrderDetail;
 import com.initiald.seckill.vo.SeckillInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,5 +58,10 @@ public class SeckillController {
         seckillInfo.setGoodsVo(goods);
         seckillInfo.setOrderInfo(orderInfo);
         return Result.success(seckillInfo);
+    }
+
+    @RequestMapping(value = "/orderDetail", method = RequestMethod.GET)
+    public Result getOrderDetail(SeckillUser user, @RequestParam("orderId") long orderId) {
+        return Result.success(seckillService.getOrderDetail(user, orderId));
     }
 }

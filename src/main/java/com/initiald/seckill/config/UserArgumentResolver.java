@@ -2,7 +2,6 @@ package com.initiald.seckill.config;
 
 import com.initiald.seckill.domain.SeckillUser;
 import com.initiald.seckill.service.SeckillUserService;
-import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Service;
@@ -48,6 +47,9 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private String getCookieValue(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
+        if (cookies == null || cookies.length == 0) {
+            return null;
+        }
         for (Cookie cookie: cookies) {
             if (cookie.getName().equals(cookieName)) {
                 return cookie.getValue();

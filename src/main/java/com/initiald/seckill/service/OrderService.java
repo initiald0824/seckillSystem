@@ -4,6 +4,10 @@ import com.initiald.seckill.dao.OrderDao;
 import com.initiald.seckill.domain.OrderInfo;
 import com.initiald.seckill.domain.SeckillOrder;
 import com.initiald.seckill.domain.SeckillUser;
+import com.initiald.seckill.exception.GlobalException;
+import com.initiald.seckill.redis.OrderKey;
+import com.initiald.seckill.redis.RedisService;
+import com.initiald.seckill.result.CodeMsg;
 import com.initiald.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +26,15 @@ public class OrderService {
     @Autowired
     private OrderDao orderDao;
 
-    public SeckillOrder getSeckillOrderByUserIdGoodsId(Long userId, long goodsId) {
-        return orderDao.getSeckillOrderByUserIdGoodsId(userId, goodsId);
+    @Autowired
+    private RedisService redisService;
+
+    public SeckillOrder getSeckillOrderByUserIdGoodsId(long userId, long goodsId) {
+        return redisService.get(OrderKey.getSeckillOrderByUidGid, ""+userId+"_"+goodsId, SeckillOrder.class);
+    }
+
+    public OrderInfo getOrderInfoById(long orderId) {
+        return orderDao.getOrderInfoById(orderId);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -38,13 +49,15 @@ public class OrderService {
         orderInfo.setOrderChannel(1);
         orderInfo.setStatus(0);
         orderInfo.setUserId(user.getId());
-        long orderId = orderDao.insert(orderInfo);
+        orderDao.insert(orderInfo);
 
         SeckillOrder seckillOrder = new SeckillOrder();
         seckillOrder.setGoodsId(goods.getId());
-        seckillOrder.setOrderId(orderId);
+        seckillOrder.setOrderId(orderInfo.getId());
         seckillOrder.setUserId(user.getId());
         orderDao.insertSeckillOrder(seckillOrder);
+
+        redisService.set(OrderKey.getSeckillOrderByUidGid, ""+user.getId()+"_"+goods.getId(), seckillOrder);
         return orderInfo;
     }
 }

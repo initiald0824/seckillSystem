@@ -50,6 +50,24 @@ public class RedisService {
         }
     }
 
+    /**
+     * 删除缓存对象
+     * @param prefix
+     * @param key
+     * @return boolean
+     */
+    public boolean delete(KeyPrefix prefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            String realKey = prefix.getPrefix() + key;
+            long ret = jedis.del(realKey);
+            return ret > 0;
+        } finally {
+            returnToPool(jedis);
+        }
+    }
+
     private <T> String beanToString(T value) {
         if (value == null) {
             return null;

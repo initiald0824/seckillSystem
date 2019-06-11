@@ -40,7 +40,33 @@ public class SeckillUserService {
     public static final String COOK1_NAME_TOKEN = "token";
 
     public SeckillUser getById(long id) {
-        return seckillUserDao.getById(id);
+        SeckillUser user = redisService.get(SeckillUserKey.getById, ""+id, SeckillUser.class);
+        if (user != null) {
+            return user;
+        }
+        user = seckillUserDao.getById(id);
+        if (user != null) {
+            redisService.set(SeckillUserKey.getById, ""+id, user);
+        }
+        return user;
+    }
+
+    public boolean updatePassword(String token, long id, String passwordNew) {
+        // 取user对象
+        SeckillUser user = getById(id);
+        if (user == null) {
+            throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
+        }
+        // 更新数据库
+        SeckillUser toBeUpdate = new SeckillUser();
+        toBeUpdate.setId(id);
+        toBeUpdate.setPassword(MD5Util.inputPassToDBPass(passwordNew, user.getSalt()));
+        seckillUserDao.update(toBeUpdate);
+        // 处理缓存
+        redisService.delete(SeckillUserKey.getById, ""+id);
+        user.setPassword(toBeUpdate.getPassword());
+        redisService.set(SeckillUserKey.token, token, user);
+        return true;
     }
 
     public void generateCookie(String token, HttpServletResponse response, SeckillUser user) {

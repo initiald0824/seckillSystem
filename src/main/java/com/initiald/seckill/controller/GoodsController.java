@@ -1,5 +1,7 @@
 package com.initiald.seckill.controller;
 
+import com.initiald.seckill.redis.GoodsKey;
+import com.initiald.seckill.redis.RedisService;
 import com.initiald.seckill.result.Result;
 import com.initiald.seckill.service.GoodsService;
 import com.initiald.seckill.vo.GoodsVo;
@@ -22,6 +24,9 @@ public class GoodsController {
 
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private RedisService redisService;
 
     @RequestMapping("/list_goods")
     public Result listGoods() {
