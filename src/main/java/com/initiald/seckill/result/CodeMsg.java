@@ -22,6 +22,8 @@ public class CodeMsg {
 
     public static CodeMsg WRONG_TOKEN = new CodeMsg(500202, "错误的Token");
 
+    public static CodeMsg SESSION_ERROR = new CodeMsg(500203, "错误的Session");
+
     public static CodeMsg SECKILL_OVER = new CodeMsg(500500, "商品秒杀完毕");
 
     public static CodeMsg SECKILL_REPEATE = new CodeMsg(500501, "不能重复秒杀");

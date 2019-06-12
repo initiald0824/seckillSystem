@@ -2,11 +2,13 @@ package com.initiald.seckill.controller;
 
 import com.initiald.seckill.domain.SeckillUser;
 import com.initiald.seckill.domain.User;
+import com.initiald.seckill.rabbitmq.MqSender;
 import com.initiald.seckill.redis.RedisService;
 import com.initiald.seckill.redis.UserKey;
 import com.initiald.seckill.result.Result;
 import com.initiald.seckill.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +25,9 @@ public class Test {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private MqSender mqSender;
 
     @RequestMapping(value = "/api/test", method = RequestMethod.GET)
     public Result test(SeckillUser user) {
@@ -49,4 +54,29 @@ public class Test {
         User getUser = redisService.get(UserKey.getById, "key2", User.class);
         return Result.success(getUser);
     }
+
+    @RequestMapping("/mq")
+    public Result mq() {
+        mqSender.send("mq send test");
+        return Result.success("mq test");
+    }
+
+    @RequestMapping("/mq/topic")
+    public Result mqTopic() {
+        mqSender.sendTopic("mq send topic test");
+        return Result.success("mq send topic test");
+    }
+
+    @RequestMapping("/mq/fanout")
+    public Result mqFanout() {
+        mqSender.sendFanout("mq send fanout test");
+        return Result.success("mq send fanout test");
+    }
+
+    @RequestMapping("/mq/header")
+    public Result mqHeader() {
+        mqSender.sendHeader("mq send header test");
+        return Result.success("mq send header test");
+    }
+
 }
