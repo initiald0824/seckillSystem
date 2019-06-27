@@ -1,5 +1,6 @@
 package com.initiald.seckill.config;
 
+import com.initiald.seckill.config.interceptors.AccessInterceptor;
 import com.initiald.seckill.config.interceptors.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,15 +23,20 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private UserArgumentResolver userArgumentResolver;
 
+    @Autowired
+    private AccessInterceptor accessInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/api/login");
+        registry.addInterceptor(accessInterceptor).addPathPatterns("/**");
     }
 
     @Bean
     public LoginInterceptor authenticationInterceptor() {
         return new LoginInterceptor();
     }
+
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

@@ -7,6 +7,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.stereotype.Service;
 
 /**
@@ -49,5 +50,11 @@ public class MqSender {
         properties.setHeader("header2", "value2");
         Message obj = new Message(msg.getBytes(), properties);
         amqpTemplate.convertAndSend(MqConfig.HEADERS_EXCHANGE, "", obj);
+    }
+
+    public void sendSeckillMessage(SeckillMessage message) {
+        String msg = RedisService.beanToString(message);
+        log.info("send seckill message: " + msg);
+        amqpTemplate.convertAndSend(MqConfig.SECKILL_QUEUE, msg);
     }
 }

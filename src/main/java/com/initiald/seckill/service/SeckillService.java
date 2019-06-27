@@ -1,8 +1,11 @@
 package com.initiald.seckill.service;
 
 import com.initiald.seckill.domain.OrderInfo;
+import com.initiald.seckill.domain.SeckillOrder;
 import com.initiald.seckill.domain.SeckillUser;
 import com.initiald.seckill.exception.GlobalException;
+import com.initiald.seckill.redis.RedisService;
+import com.initiald.seckill.redis.SeckillKey;
 import com.initiald.seckill.result.CodeMsg;
 import com.initiald.seckill.vo.GoodsVo;
 import com.initiald.seckill.vo.OrderDetail;
@@ -23,12 +26,28 @@ public class SeckillService {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private RedisService redisService;
+
     @Transactional(rollbackFor = Exception.class)
     public OrderInfo seckill(SeckillUser user, GoodsVo goods) {
         // 减库存 下订单 写入秒杀订单
-        goodsService.reduceStock(goods);
-        // order_info seckill_order
-        return orderService.createOrder(user, goods);
+        boolean success = goodsService.reduceStock(goods);
+        if (success) {
+            // order_info seckill_order
+            return orderService.createOrder(user, goods);
+        } else {
+            setGoodsOver(goods.getId());
+            return null;
+        }
+    }
+
+    private void setGoodsOver(Long goodsId) {
+        redisService.set(SeckillKey.isGoodsOver, ""+goodsId, true);
+    }
+
+    private boolean getGoodsOver(long goodsId) {
+        return redisService.exists(SeckillKey.isGoodsOver, ""+goodsId);
     }
 
     public OrderDetail getOrderDetail(SeckillUser user, long orderId) {
@@ -42,4 +61,20 @@ public class SeckillService {
         orderDetail.setSeckillGoodsVo(goodsService.getGoodsDetail(orderInfo.getGoodsId()));
         return orderDetail;
     }
+
+    public long getSeckillResult(Long userId, long goodsId) {
+        SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(userId, goodsId);
+        if (order != null) {
+            return order.getOrderId();
+        } else {
+            boolean isOver = getGoodsOver(goodsId);
+            if (isOver) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+
 }

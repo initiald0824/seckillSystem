@@ -15,6 +15,8 @@ public class CodeMsg {
     public static CodeMsg MOBILE_ERROR = new CodeMsg(500101, "error mobile");
     public static CodeMsg MOBILE_NOT_EXIST = new CodeMsg(500102, "mobile not exist");
     public static CodeMsg PASSWORD_ERROR = new CodeMsg(500103, "password error");
+    public static CodeMsg REQUEST_ILLEGAL = new CodeMsg(500104, "非法请求");
+    public static CodeMsg ACCESS_LIMIT = new CodeMsg(500105, "访问频率过快");
 
     public static CodeMsg BIND_ERROR = new CodeMsg(500110, "参数校验异常: %s");
 

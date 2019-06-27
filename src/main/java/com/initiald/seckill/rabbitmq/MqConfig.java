@@ -29,6 +29,8 @@ public class MqConfig {
     public static final String HEADERS_EXCHANGE= "headersExchange";
     public static final String HEADERS_QUEUE = "headers.queue";
 
+    public static final String SECKILL_QUEUE = "seckill.queue";
+
     /**
      * Direct模式
      * @return Queue
@@ -99,6 +101,11 @@ public class MqConfig {
         map.put("header1", "value1");
         map.put("header2", "value2");
         return BindingBuilder.bind(headersQueue()).to(headersExchange()).whereAll(map).match();
+    }
+
+    @Bean
+    public Queue seckillQueue() {
+        return new Queue(SECKILL_QUEUE, true);
     }
 
 }

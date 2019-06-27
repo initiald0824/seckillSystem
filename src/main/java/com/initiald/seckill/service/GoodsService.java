@@ -30,9 +30,10 @@ public class GoodsService {
         return seckillGoodsVo;
     }
 
-    public void reduceStock(GoodsVo goods) {
+    public boolean reduceStock(GoodsVo goods) {
         SeckillGoods seckillGoods = new SeckillGoods();
         seckillGoods.setGoodsId(goods.getId());
-        goodsDao.reduceStock(seckillGoods);
+        int ret = goodsDao.reduceStock(seckillGoods);
+        return ret > 0;
     }
 }
